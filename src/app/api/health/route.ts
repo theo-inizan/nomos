@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server';
 
 export async function GET() {
     // Format Prometheus : nomos_up 1 (indique que l'app est en vie)
@@ -15,3 +14,4 @@ nomos_uptime_seconds ${process.uptime()}
         status: 200,
         headers: { 'Content-Type': 'text/plain; version=0.0.4' },
     });
+}
