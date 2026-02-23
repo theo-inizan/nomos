@@ -1,5 +1,6 @@
 services:
   nomos:
+    container_name: nomos
     build:
       context: .
       target: runner # Utilise l'étape finale légère du Dockerfile
