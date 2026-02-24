@@ -11,10 +11,10 @@ permissions:
   contents: read
   pull-requests: write
   checks: write
-  security-events: write # Requis pour l'affichage des alertes de sécurité
+  security-events: write 
 
 jobs:
-  # --- ÉTAPE 1 : QUALITÉ & SÉCURITÉ STATIQUE ---
+  # --- QUALITÉ & SÉCURITÉ STATIQUE ---
   security_scan:
     name: Security Analysis (SCA/Secrets)
     runs-on: ubuntu-latest
@@ -29,7 +29,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # 2. Setup Node.js and install dependencies
+      # 2. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -39,11 +39,11 @@ jobs:
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
-      # 3. SCA (Dependency Scan) - Production only
+      # 3. SCA (Dependency Scan)
       - name: Security Audit (Production dependencies only)
         run: npm run audit:prod
       
-      # 4. Full audit report (informational, non-blocking)
+      # 4. Full audit report
       - name: Full Audit Report (Dev + Prod)
         run: npm audit || true
         continue-on-error: true
@@ -145,7 +145,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Construction de l'image (en utilisant ton Dockerfile Multi-stage)
+      # Construction de l'image
       - name: Build Docker Image
         run: |
           docker build \
@@ -159,18 +159,18 @@ jobs:
         with:
           image-ref: 'mon-app:${{ github.sha }}'
           format: 'table'
-          # On met exit-code: 0 pour éviter de bloquer le déploiement en cas de failles
           exit-code: '0'
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
 
-      # Bonus : Génération du SBOM (Syft)
+      # Génération du SBOM 
       - name: Generate SBOM (Syft)
         uses: anchore/sbom-action@v0
         with:
           image: mon-app:${{ github.sha }}
           artifact-name: sbom.json
+          
   # --- ÉTAPE 3 : DÉPLOIEMENT CONTINU ---
   deploy:
     name: Deploy to VPS (Infomaniak)
