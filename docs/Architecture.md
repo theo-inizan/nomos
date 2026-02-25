@@ -1,4 +1,4 @@
-# Architecture & Infrastructure
+# Architecture & Infrastructur
  
 Ce document détaille l'organisation technique du projet NOMOS, son infrastructure et son pipeline de déploiement continu.
  
